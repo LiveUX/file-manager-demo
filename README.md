@@ -3,7 +3,20 @@
 Four complete, ready-to-run Symfony showcase applications demonstrating **LiveUX FileManagerBundle** across **Symfony 6.4 LTS**, **Symfony 7.4 LTS**, and **Symfony 8.1** with both **AssetMapper** and **Webpack Encore**.
 
 - **Main Bundle Repository:** [LiveUX/file-manager-bundle](https://github.com/LiveUX/file-manager-bundle)
+- **Full 14-Chapter HD Video Walkthrough:** [Watch on YouTube](https://www.youtube.com/watch?v=H2CAf0RiDd8)
 - **License:** MIT
+
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=H2CAf0RiDd8" target="_blank">
+    <img src="https://img.shields.io/badge/YouTube-Watch_Full_14--Chapter_1080p_Showcase_(03:52)-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="Watch Full 14-Chapter 1080p Showcase on YouTube">
+  </a>
+</p>
+
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=H2CAf0RiDd8" target="_blank">
+    <img src="https://img.youtube.com/vi/H2CAf0RiDd8/maxresdefault.jpg" alt="LiveUX FileManagerBundle — Full 14-Chapter 1080p YouTube Showcase" width="100%">
+  </a>
+</p>
 
 ---
 
