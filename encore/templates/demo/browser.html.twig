@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div style="height: 670px;">
+        {{ component('LiveUX:FileManager:Browser', {
+            profile: 'default',
+            mode: 'inline',
+            theme: activeTheme,
+            iconSet: activeIconSet,
+            locale: activeLocale
+        }) }}
+    </div>
+{% endblock %}

@@ -1,0 +1,23 @@
+# Dependencies & build caches
+*/vendor/
+*/var/
+*/public/assets/
+encore/node_modules/
+encore/public/build/
+
+# Local environment & SQLite databases
+*/.env.local
+*/.env.*.local
+*.db
+*.sqlite
+
+# Temporary Playwright / FFmpeg recording artifacts
+var-video/
+var-video-int/
+var-video-yt/
+
+# IDE & OS files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

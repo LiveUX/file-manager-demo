@@ -1,0 +1,45 @@
+<div {{ attributes }}>
+    {{ form_start(form, { attr: { 'data-action': 'live#action:prevent', 'data-live-action-param': 'save' } }) }}
+        <h3 style="margin:0 0 10px; font-size:0.95rem; font-weight:800;">A) Compound Sub-Form (<code>SlideItemType</code> inside <code>LiveCollectionType</code>)</h3>
+        <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:14px;">
+            {% for slideForm in form.slides %}
+                <div class="liveux-demo-card" style="padding:14px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                        <strong style="font-size:0.84rem;">Slide #{{ loop.index }}</strong>
+                        {{ form_widget(slideForm.vars.button_delete) }}
+                    </div>
+                    <div style="display:grid; grid-template-columns:1fr 1.3fr 1.3fr; gap:12px; align-items:start;">
+                        <div>{{ form_row(slideForm.title) }}</div>
+                        <div>{{ form_row(slideForm.image) }}</div>
+                        <div>{{ form_row(slideForm.attachments) }}</div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div style="margin-bottom:20px;">
+            {{ form_widget(form.slides.vars.button_add) }}
+        </div>
+
+        <h3 style="margin:0 0 10px; font-size:0.95rem; font-weight:800;">B) Direct Scalar List (<code>FileManagerPickerType</code> directly inside <code>LiveCollectionType</code>)</h3>
+        <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:14px;">
+            {% for logoField in form.logos %}
+                <div class="liveux-demo-card" style="padding:10px 14px; display:flex; align-items:center; justify-content:space-between; gap:12px;">
+                    <div style="flex:1;">{{ form_widget(logoField) }}</div>
+                    <div>{{ form_widget(logoField.vars.button_delete) }}</div>
+                </div>
+            {% endfor %}
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
+            <div>{{ form_widget(form.logos.vars.button_add) }}</div>
+            <button type="submit" class="liveux-demo-btn is-primary">Submit LiveCollection (AJAX)</button>
+        </div>
+        {{ form_rest(form) }}
+    {{ form_end(form) }}
+
+    {% if savedPayload is not null %}
+        <div style="margin-top:14px; padding:12px 14px; border-radius:10px; background:rgba(16,185,129,0.12); border:1px solid rgba(16,185,129,0.35);">
+            <strong style="display:block; margin-bottom:6px; color:#047857;">LiveCollection submitted without full page reload!</strong>
+            <pre style="margin:0; font-size:0.76rem; overflow:auto; max-height:180px;">{{ savedPayload|json_encode(constant('JSON_PRETTY_PRINT') b-or constant('JSON_UNESCAPED_SLASHES')) }}</pre>
+        </div>
+    {% endif %}
+</div>

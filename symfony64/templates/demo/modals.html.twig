@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="liveux-demo-panel">
+        <h2 style="margin:0 0 6px; font-size:1.15rem; font-weight:800;">Modal, 4-Direction OffCanvas &amp; JavaScript Promise API</h2>
+        <p style="margin:0 0 18px; font-size:0.84rem; color:var(--demo-muted);">
+            Opens natively in the HTML5 <code>&lt;dialog&gt;</code> Top Layer with zero <code>z-index</code> conflicts and adaptive mobile full-screen / bottom-sheet layouts.
+        </p>
+
+        <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:20px;">
+            <button type="button" class="liveux-demo-btn is-primary" data-open-fm='{"mode":"modal","multiple":true}'>Centered Modal (Multi-Select)</button>
+            <button type="button" class="liveux-demo-btn" data-open-fm='{"mode":"offcanvas","position":"end","multiple":true}'>OffCanvas Right (End)</button>
+            <button type="button" class="liveux-demo-btn" data-open-fm='{"mode":"offcanvas","position":"start"}'>OffCanvas Left (Start)</button>
+            <button type="button" class="liveux-demo-btn" data-open-fm='{"mode":"offcanvas","position":"bottom"}'>OffCanvas Bottom (Mobile Sheet)</button>
+            <button type="button" class="liveux-demo-btn" data-open-fm='{"mode":"offcanvas","position":"top"}'>OffCanvas Top</button>
+            <button type="button" class="liveux-demo-btn" data-open-fm='{"mode":"modal","mobileMode":"sheet"}'>Mobile Bottom Sheet Mode</button>
+        </div>
+
+        <pre id="js-api-output" style="margin:0; padding:14px; border-radius:10px; background:rgba(15,23,42,0.06); border:1px solid var(--demo-border); font-size:0.78rem; overflow:auto; min-height:110px;">// Click any button above to pick files and inspect the returned JSON payload here...</pre>
+    </div>
+
+    <script>
+        document.querySelectorAll('[data-open-fm]').forEach((btn) => {
+            btn.addEventListener('click', async () => {
+                const opts = JSON.parse(btn.getAttribute('data-open-fm') || '{}');
+                const files = await window.LiveUXFileManager.open({
+                    profile: 'default',
+                    theme: {{ activeTheme|json_encode|raw }},
+                    iconSet: {{ activeIconSet|json_encode|raw }},
+                    locale: {{ activeLocale|json_encode|raw }},
+                    ...opts,
+                });
+                document.getElementById('js-api-output').textContent = JSON.stringify(files, null, 2);
+            });
+        });
+    </script>
+{% endblock %}

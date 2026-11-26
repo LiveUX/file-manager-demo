@@ -1,0 +1,67 @@
+liveux_file_manager:
+    defaults:
+        base_path: '%kernel.project_dir%/public/uploads'
+        theme: 'bootstrap5'
+        color_scheme: 'auto'
+        locale: 'en'
+        cache:
+            enabled: true
+            ttl: 300
+        metadata:
+            enabled: true
+            driver: 'doctrine'
+            table: 'liveux_fm_metadata'
+            auto_create_table: true
+
+    volumes:
+        media_library:
+            label: 'Media Library'
+            icon: 'disk'
+            group: 'local'
+            driver: 'LocalFileSystem'
+            path: '%kernel.project_dir%/public/uploads/media'
+            url_prefix: '/uploads/media'
+            private: false
+
+        brand_vault:
+            label: 'Brand Assets'
+            icon: 'cloud'
+            group: 'network'
+            driver: 'LocalFileSystem'
+            path: '%kernel.project_dir%/public/uploads/brand'
+            url_prefix: '/uploads/brand'
+            private: false
+
+    profiles:
+        default:
+            volumes: ['media_library', 'brand_vault']
+            upload_max_size: '50M'
+            storage_quota: '500M'
+            naming:
+                slugger: true
+                transformer: 'lowercase'
+            thumbnail:
+                enabled: true
+                driver: 'auto'
+                width: 360
+                height: 270
+                format: 'webp'
+            zip:
+                enabled: true
+                allow_extract: true
+            security:
+                voter_enabled: false
+                csrf_protection: true
+                sanitize_svg: true
+                allow_remote_url_import: true
+            ui:
+                icon_set: 'windows11'
+                item_size: 'md'
+                card_aspect_ratio: '4/3'
+                folder_style: 'tile'
+                show_folder_tree: true
+                tree_lines: true
+                show_folder_item_count: true
+                show_perf_badge: true
+                inspector_mode: 'on_select'
+                remember_last_dir: false

@@ -1,0 +1,31 @@
+{
+    "controllers": {
+        "@liveux/file-manager-bundle": {
+            "dialog": {
+                "enabled": true,
+                "fetch": "eager",
+                "autoimport": {
+                    "@liveux/file-manager-bundle/styles/core.css": true
+                }
+            },
+            "browser": {
+                "enabled": true,
+                "fetch": "lazy"
+            },
+            "picker": {
+                "enabled": true,
+                "fetch": "lazy"
+            }
+        },
+        "@symfony/ux-live-component": {
+            "live": {
+                "enabled": true,
+                "fetch": "eager",
+                "autoimport": {
+                    "@symfony/ux-live-component/dist/live.min.css": true
+                }
+            }
+        }
+    },
+    "entrypoints": []
+}

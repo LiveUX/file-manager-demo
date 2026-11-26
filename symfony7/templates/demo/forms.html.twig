@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="liveux-demo-panel">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:16px;">
+            <div>
+                <h2 style="margin:0; font-size:1.15rem; font-weight:800;">FileManagerPickerType — All 5 Variants + Doctrine SQLite</h2>
+                <p style="margin:4px 0 0; font-size:0.82rem; color:var(--demo-muted);">
+                    Test single pickers, multi-select drag/keyboard/touch gallery reordering, and real Doctrine persistence.
+                </p>
+            </div>
+            {% if saved %}
+                <span style="padding:6px 12px; border-radius:999px; background:rgba(22,163,74,0.14); color:#15803d; font-size:0.8rem; font-weight:700;">✓ Saved to SQLite Database</span>
+            {% endif %}
+        </div>
+
+        {{ form_start(form) }}
+            <div style="margin-bottom:16px;" class="liveux-demo-field-card">
+                {{ form_label(form.title) }}
+                {{ form_widget(form.title, { attr: { style: 'width:100%; padding:8px 12px; border-radius:8px; border:1px solid var(--demo-border); background:transparent; color:inherit;' } }) }}
+            </div>
+
+            <div class="liveux-demo-grid-2">
+                <div class="liveux-demo-field-card">
+                    {{ form_label(form.compactImage) }}
+                    {{ form_widget(form.compactImage) }}
+                </div>
+                <div class="liveux-demo-field-card">
+                    {{ form_label(form.cardImage) }}
+                    {{ form_widget(form.cardImage) }}
+                </div>
+                <div class="liveux-demo-field-card">
+                    {{ form_label(form.dropzoneImage) }}
+                    {{ form_widget(form.dropzoneImage) }}
+                </div>
+                <div class="liveux-demo-field-card">
+                    {{ form_label(form.avatarImage) }}
+                    {{ form_widget(form.avatarImage) }}
+                </div>
+                <div class="liveux-demo-field-card">
+                    {{ form_label(form.documentFile) }}
+                    {{ form_widget(form.documentFile) }}
+                </div>
+                <div class="liveux-demo-field-card">
+                    {{ form_label(form.galleryImages) }}
+                    {{ form_widget(form.galleryImages) }}
+                </div>
+            </div>
+
+            <div style="margin-top:18px; display:flex; justify-content:flex-end;">
+                <button type="submit" class="liveux-demo-btn is-primary">Save Product to Doctrine SQLite</button>
+            </div>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

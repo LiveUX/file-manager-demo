@@ -1,0 +1,230 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <style>
+        .editor-tabs { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
+        .editor-tab {
+            padding:7px 14px; border-radius:10px; font-weight:700; font-size:0.82rem;
+            border:1px solid var(--demo-border); background:var(--demo-card); color:var(--demo-text);
+            text-decoration:none; cursor:pointer;
+        }
+        .editor-tab.is-active { background:#2563eb; border-color:#2563eb; color:#ffffff; }
+        .editor-section { display:none; }
+        .editor-section.is-visible { display:block; }
+        .editor-toolbar-bar {
+            display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;
+            margin-bottom:12px; padding:10px 14px; border-radius:10px;
+            background:rgba(37,99,235,0.06); border:1px solid var(--demo-border);
+        }
+        .tiptap-shell, .quill-shell, .trix-shell, .editorjs-shell {
+            border:1px solid var(--demo-border); border-radius:12px; overflow:hidden; background:#ffffff; color:#0f172a;
+        }
+        .tiptap-toolbar {
+            display:flex; flex-wrap:wrap; gap:6px; padding:8px 12px;
+            background:#f8fafc; border-bottom:1px solid #e2e8f0;
+        }
+        .tiptap-toolbar button {
+            padding:5px 10px; border-radius:7px; border:1px solid #cbd5e1;
+            background:#ffffff; color:#1e293b; font-size:0.8rem; font-weight:700; cursor:pointer;
+        }
+        .tiptap-toolbar button.is-primary { background:#2563eb; border-color:#2563eb; color:#ffffff; }
+        .tiptap-editor .ProseMirror { min-height:280px; padding:18px 20px; outline:none; font-size:0.95rem; line-height:1.65; }
+        .tiptap-editor .ProseMirror img { max-width:340px; border-radius:10px; display:block; margin:12px 0; box-shadow:0 8px 20px rgba(15,23,42,0.12); }
+        .ck-editor__editable_inline { min-height:280px; color:#0f172a; }
+        .ck-editor__editable_inline figure.image, .ck-editor__editable_inline img { max-width:340px !important; border-radius:8px; }
+        .ql-container { min-height:260px; font-size:0.95rem; }
+        .ql-editor img { max-width:340px; border-radius:10px; box-shadow:0 8px 20px rgba(15,23,42,0.12); margin:10px 0; }
+        .trix-shell { padding:14px; }
+        trix-editor { min-height:240px; background:#ffffff; color:#0f172a; border-radius:8px; }
+        .editorjs-shell { padding:20px 28px; min-height:300px; }
+        .editorjs-shell .cdx-simple-image img { max-width:340px !important; border-radius:10px; }
+        .grapesjs-shell { border:1px solid var(--demo-border); border-radius:12px; overflow:hidden; background:#1e293b; }
+        .lexical-shell { border:1px solid var(--demo-border); border-radius:12px; overflow:hidden; background:#ffffff; color:#0f172a; }
+        .lexical-editable { min-height:280px; padding:18px 22px; outline:none; font-size:0.95rem; line-height:1.65; }
+        .lexical-editable figure { margin:14px 0; }
+        .lexical-editable img { max-width:340px; border-radius:10px; box-shadow:0 8px 20px rgba(15,23,42,0.12); display:block; }
+        .lexical-editable figcaption { font-size:0.8rem; color:#64748b; margin-top:6px; }
+    </style>
+
+    <div class="liveux-demo-panel"
+         data-controller="editors-demo"
+         data-editors-demo-theme-value="{{ activeTheme }}"
+         data-editors-demo-icon-set-value="{{ activeIconSet }}"
+         data-editors-demo-locale-value="{{ activeLocale }}"
+         data-editors-demo-active-editor-value="{{ activeEditor }}">
+
+        <div style="margin-bottom:14px;">
+            <h2 style="margin:0 0 4px; font-size:1.18rem; font-weight:800;">9 Ready WYSIWYG, Block &amp; Page Builder Integrations</h2>
+            <p style="margin:0; font-size:0.84rem; color:var(--demo-muted);">
+                Zero-dependency official adapters for <strong>TinyMCE (5/6/7/8)</strong>, <strong>CKEditor 5</strong>, <strong>Tiptap 2</strong>, <strong>Quill 2</strong>, <strong>Trix (EasyAdmin)</strong>, <strong>Summernote</strong>, <strong>Editor.js</strong>, <strong>GrapesJS</strong>, and <strong>Meta Lexical</strong> — all hardened with strict XSS URL validation and native <code>&lt;dialog&gt;</code> Top Layer.
+            </p>
+        </div>
+
+        <div class="editor-tabs">
+            {% set tabs = [
+                { id: 'tinymce',    label: '1. TinyMCE 5/6/7/8' },
+                { id: 'ckeditor5',  label: '2. CKEditor 5' },
+                { id: 'tiptap',     label: '3. Tiptap 2' },
+                { id: 'quill',      label: '4. Quill 2' },
+                { id: 'trix',       label: '5. Trix (EasyAdmin)' },
+                { id: 'summernote', label: '6. Summernote' },
+                { id: 'editorjs',   label: '7. Editor.js' },
+                { id: 'grapesjs',   label: '8. GrapesJS' },
+                { id: 'lexical',    label: '9. Meta Lexical' },
+            ] %}
+            {% for tab in tabs %}
+                <a class="editor-tab {{ activeEditor == tab.id ? 'is-active' : '' }}"
+                   href="{{ path('demo_editors', { editor: tab.id, theme: activeTheme, icon_set: activeIconSet, locale: activeLocale, scheme: activeScheme }) }}">
+                    {{ tab.label }}
+                </a>
+            {% endfor %}
+        </div>
+
+        {# 1. TINYMCE #}
+        <section class="editor-section {{ activeEditor == 'tinymce' ? 'is-visible' : '' }}">
+            <div class="editor-toolbar-bar">
+                <div>
+                    <strong>TinyMCE 5 / 6 / 7 / 8 + <code>createTinyMceFilePicker()</code></strong>
+                    <div style="font-size:0.8rem; color:var(--demo-muted);">Hooks directly into TinyMCE's Image/Media/Link file picker with zero z-index or focus-trap conflicts.</div>
+                </div>
+                <button type="button" class="liveux-demo-btn is-primary" data-action="editors-demo#openTinyMceImageDialog">Insert Image via TinyMCE Picker</button>
+            </div>
+            <textarea id="tinymce-editor" data-editors-demo-target="tinymceTextarea">
+                <h2>Summer Product Launch — TinyMCE Integration</h2>
+                <p>Click the <strong>Insert/edit image</strong> toolbar button above to open <strong>LiveUX FileManagerBundle</strong> directly over TinyMCE's dialog.</p>
+            </textarea>
+        </section>
+
+        {# 2. CKEDITOR 5 #}
+        <section class="editor-section {{ activeEditor == 'ckeditor5' ? 'is-visible' : '' }}">
+            <div class="editor-toolbar-bar">
+                <div>
+                    <strong>CKEditor 5 Classic + <code>openFileManagerForCKEditor5()</code></strong>
+                    <div style="font-size:0.8rem; color:var(--demo-muted);">Multi-select image insertion (<code>insertImage</code>) and automatic download links for PDFs/ZIPs.</div>
+                </div>
+                <button type="button" class="liveux-demo-btn is-primary" data-action="editors-demo#insertIntoCkEditor">Insert Media from LiveUX (OffCanvas)</button>
+            </div>
+            <div id="ckeditor5-editor" data-editors-demo-target="ckeditorHost">
+                <h2>Enterprise DAM Workflow — CKEditor 5</h2>
+                <p>Use the <strong>Insert Media from LiveUX</strong> button above to select single or multiple images and documents directly into CKEditor 5.</p>
+            </div>
+        </section>
+
+        {# 3. TIPTAP 2 #}
+        <section class="editor-section {{ activeEditor == 'tiptap' ? 'is-visible' : '' }}">
+            <div class="editor-toolbar-bar">
+                <div>
+                    <strong>Tiptap 2 (ProseMirror) + <code>insertFromFileManager()</code></strong>
+                    <div style="font-size:0.8rem; color:var(--demo-muted);">Preserves SEO <code>alt</code> &amp; <code>title</code> metadata on images and inserts clickable links for documents.</div>
+                </div>
+                <button type="button" class="liveux-demo-btn is-primary" data-action="editors-demo#insertIntoTiptap">Insert Image / File into Tiptap</button>
+            </div>
+            <div class="tiptap-shell">
+                <div class="tiptap-toolbar">
+                    <button type="button" data-action="editors-demo#tiptapBold"><strong>B</strong></button>
+                    <button type="button" data-action="editors-demo#tiptapItalic"><em>I</em></button>
+                    <button type="button" data-action="editors-demo#tiptapHeading">H2</button>
+                    <button type="button" data-action="editors-demo#tiptapBullet">• List</button>
+                    <button type="button" class="is-primary" data-action="editors-demo#insertIntoTiptap">🖼 Insert Media (LiveUX)</button>
+                </div>
+                <div class="tiptap-editor" data-editors-demo-target="tiptapHost"></div>
+            </div>
+        </section>
+
+        {# 4. QUILL 2 #}
+        <section class="editor-section {{ activeEditor == 'quill' ? 'is-visible' : '' }}">
+            <div class="editor-toolbar-bar">
+                <div>
+                    <strong>Quill 2 + <code>createQuillImageHandler()</code> / <code>openFileManagerForQuill()</code></strong>
+                    <div style="font-size:0.8rem; color:var(--demo-muted);">Click the built-in <strong>Image</strong> button in Quill's snow toolbar (or the button on the right) to pick images with SEO <code>alt</code>.</div>
+                </div>
+                <button type="button" class="liveux-demo-btn is-primary" data-action="editors-demo#insertIntoQuill">Insert Media into Quill</button>
+            </div>
+            <div class="quill-shell">
+                <div id="quill-editor" data-editors-demo-target="quillHost">
+                    <h2>Lightweight Rich Text — Quill 2 Integration</h2>
+                    <p>Click Quill's built-in <strong>Image</strong> toolbar icon below to replace the default file dialog with <strong>LiveUX FileManagerBundle</strong>.</p>
+                </div>
+            </div>
+        </section>
+
+        {# 5. TRIX (EASYADMIN TEXTEDITORFIELD) #}
+        <section class="editor-section {{ activeEditor == 'trix' ? 'is-visible' : '' }}">
+            <div class="editor-toolbar-bar">
+                <div>
+                    <strong>Trix Editor (EasyAdmin <code>TextEditorField</code> &amp; Turbo) + <code>openFileManagerForTrix()</code></strong>
+                    <div style="font-size:0.8rem; color:var(--demo-muted);">Inserts rich Trix image attachments and safe document links straight into <code>&lt;trix-editor&gt;</code>.</div>
+                </div>
+                <button type="button" class="liveux-demo-btn is-primary" data-action="editors-demo#insertIntoTrix">Insert Media into Trix</button>
+            </div>
+            <div class="trix-shell">
+                <input id="trix-hidden-input" type="hidden" value="<h2>Symfony Turbo &amp; EasyAdmin — Trix Editor</h2><p>Click <strong>Insert Media into Trix</strong> above to pick high-resolution assets via LiveUX FileManagerBundle.</p>">
+                <trix-editor input="trix-hidden-input" data-editors-demo-target="trixEditor"></trix-editor>
+            </div>
+        </section>
+
+        {# 6. SUMMERNOTE #}
+        <section class="editor-section {{ activeEditor == 'summernote' ? 'is-visible' : '' }}">
+            <div class="editor-toolbar-bar">
+                <div>
+                    <strong>Summernote + <code>openFileManagerForSummernote()</code></strong>
+                    <div style="font-size:0.8rem; color:var(--demo-muted);">Classic Bootstrap admin panel editor — inserts safe DOM <code>&lt;img&gt;</code> nodes with <code>alt</code>/<code>title</code> and clickable file links.</div>
+                </div>
+                <button type="button" class="liveux-demo-btn is-primary" data-action="editors-demo#insertIntoSummernote">Insert Media into Summernote</button>
+            </div>
+            <div style="background:#ffffff; color:#0f172a; border-radius:10px;">
+                <textarea id="summernote-editor" data-editors-demo-target="summernoteTextarea">
+                    <h2>Bootstrap Admin Panel — Summernote Integration</h2>
+                    <p>Click <strong>Insert Media into Summernote</strong> above to insert images and documents via LiveUX FileManagerBundle.</p>
+                </textarea>
+            </div>
+        </section>
+
+        {# 7. EDITOR.JS #}
+        <section class="editor-section {{ activeEditor == 'editorjs' ? 'is-visible' : '' }}">
+            <div class="editor-toolbar-bar">
+                <div>
+                    <strong>Editor.js (Block JSON Editor) + <code>openFileManagerForEditorJs()</code></strong>
+                    <div style="font-size:0.8rem; color:var(--demo-muted);">Inserts structured <code>simpleImage</code> / <code>image</code> JSON blocks with captions and paragraph download links.</div>
+                </div>
+                <button type="button" class="liveux-demo-btn is-primary" data-action="editors-demo#insertIntoEditorJs">Insert Image Block (LiveUX)</button>
+            </div>
+            <div class="editorjs-shell">
+                <div id="editorjs-host" data-editors-demo-target="editorJsHost"></div>
+            </div>
+        </section>
+
+        {# 8. GRAPESJS (VISUAL PAGE BUILDER) #}
+        <section class="editor-section {{ activeEditor == 'grapesjs' ? 'is-visible' : '' }}">
+            <div class="editor-toolbar-bar">
+                <div>
+                    <strong>GrapesJS (Visual Page &amp; Email Builder) + <code>createGrapesJsAssetManagerConfig()</code> / <code>openFileManagerForGrapesJs()</code></strong>
+                    <div style="font-size:0.8rem; color:var(--demo-muted);">Replaces GrapesJS's built-in Asset Manager modal or inserts image/link components directly onto the canvas.</div>
+                </div>
+                <button type="button" class="liveux-demo-btn is-primary" data-action="editors-demo#insertIntoGrapesJs">Insert Media into GrapesJS</button>
+            </div>
+            <div class="grapesjs-shell">
+                <div id="grapesjs-host" data-editors-demo-target="grapesJsHost"></div>
+            </div>
+        </section>
+
+        {# 9. META LEXICAL #}
+        <section class="editor-section {{ activeEditor == 'lexical' ? 'is-visible' : '' }}">
+            <div class="editor-toolbar-bar">
+                <div>
+                    <strong>Meta Lexical + <code>openFileManagerForLexical()</code></strong>
+                    <div style="font-size:0.8rem; color:var(--demo-muted);">Dispatches a custom <code>INSERT_IMAGE_COMMAND</code> into Meta's Lexical editor with strict XSS URL validation and SEO <code>altText</code>.</div>
+                </div>
+                <button type="button" class="liveux-demo-btn is-primary" data-action="editors-demo#insertIntoLexical">Insert Image into Lexical</button>
+            </div>
+            <div class="lexical-shell">
+                <div class="tiptap-toolbar">
+                    <button type="button" data-action="editors-demo#lexicalBold"><strong>B</strong></button>
+                    <button type="button" data-action="editors-demo#lexicalItalic"><em>I</em></button>
+                    <button type="button" class="is-primary" data-action="editors-demo#insertIntoLexical">🖼 Insert Media (LiveUX)</button>
+                </div>
+                <div id="lexical-host" class="lexical-editable" contenteditable="true" data-editors-demo-target="lexicalHost"></div>
+            </div>
+        </section>
+    </div>
+{% endblock %}

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LiveUX FileManagerBundle — Banner Studio</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body {
+            width: 1280px;
+            height: 640px;
+            overflow: hidden;
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .banner {
+            position: relative;
+            width: 1280px;
+            height: 640px;
+            display: grid;
+            grid-template-columns: 516px 1fr;
+            align-items: center;
+            padding: 28px 34px;
+            gap: 26px;
+            overflow: hidden;
+            {% if mode == 'dark' %}
+                background: radial-gradient(circle at 14% 20%, rgba(37, 99, 235, 0.34), transparent 52%),
+                            radial-gradient(circle at 86% 82%, rgba(124, 58, 237, 0.32), transparent 52%),
+                            linear-gradient(135deg, #060b18 0%, #0f172a 55%, #161433 100%);
+                color: #f8fafc;
+            {% else %}
+                background: radial-gradient(circle at 12% 18%, rgba(37, 99, 235, 0.14), transparent 48%),
+                            radial-gradient(circle at 88% 85%, rgba(124, 58, 237, 0.14), transparent 48%),
+                            linear-gradient(135deg, #f8fbff 0%, #eef4ff 52%, #f5f0ff 100%);
+                color: #0f172a;
+            {% endif %}
+        }
+        .banner::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: url('/images/liveux-logo.webp');
+            background-repeat: no-repeat;
+            background-position: -90px 260px;
+            background-size: 460px 460px;
+            opacity: {{ mode == 'dark' ? '0.07' : '0.08' }};
+            pointer-events: none;
+        }
+        .left {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .brand-row {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+        }
+        .logo-box {
+            width: 62px;
+            height: 62px;
+            border-radius: 16px;
+            background: #ffffff;
+            padding: 4px;
+            box-shadow: 0 12px 28px rgba(29, 78, 216, 0.22);
+            border: 1.5px solid {{ mode == 'dark' ? 'rgba(255,255,255,0.2)' : 'rgba(29,78,216,0.18)' }};
+            flex-shrink: 0;
+        }
+        .logo-box img {
+            width: 100%;
+            height: 100%;
+            border-radius: 12px;
+            display: block;
+        }
+        .org-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 3.5px 10px;
+            border-radius: 999px;
+            font-size: 10.5px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            background: {{ mode == 'dark' ? 'rgba(96,165,250,0.16)' : 'rgba(29,78,216,0.10)' }};
+            color: {{ mode == 'dark' ? '#93c5fd' : '#1d4ed8' }};
+            border: 1px solid {{ mode == 'dark' ? 'rgba(147,197,253,0.28)' : 'rgba(29,78,216,0.2)' }};
+            width: fit-content;
+            margin-bottom: 4px;
+        }
+        .title {
+            font-size: 35px;
+            font-weight: 900;
+            line-height: 1.06;
+            letter-spacing: -0.03em;
+        }
+        .title-gradient {
+            background: linear-gradient(90deg, {{ mode == 'dark' ? '#60a5fa, #c084fc' : '#1d4ed8, #7c3aed' }});
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .subtitle {
+            font-size: 13.8px;
+            line-height: 1.46;
+            color: {{ mode == 'dark' ? '#cbd5e1' : '#334155' }};
+        }
+        .pills {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 7px;
+        }
+        .pill {
+            padding: 6px 10px;
+            border-radius: 8px;
+            font-size: 11.4px;
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            background: {{ mode == 'dark' ? 'rgba(30,41,59,0.88)' : 'rgba(255,255,255,0.92)' }};
+            color: {{ mode == 'dark' ? '#e2e8f0' : '#1e293b' }};
+            border: 1px solid {{ mode == 'dark' ? 'rgba(148,163,184,0.24)' : 'rgba(15,23,42,0.10)' }};
+            box-shadow: 0 3px 10px rgba(15, 23, 42, 0.06);
+        }
+        .pill.is-wide {
+            grid-column: span 2;
+        }
+        .integrations-box {
+            padding: 9px 12px;
+            border-radius: 10px;
+            background: {{ mode == 'dark' ? 'rgba(30,41,59,0.68)' : 'rgba(255,255,255,0.84)' }};
+            border: 1px solid {{ mode == 'dark' ? 'rgba(96,165,250,0.28)' : 'rgba(37,99,235,0.18)' }};
+            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+        }
+        .integrations-label {
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: {{ mode == 'dark' ? '#93c5fd' : '#1d4ed8' }};
+            margin-bottom: 4px;
+        }
+        .integrations-list {
+            font-size: 11.5px;
+            font-weight: 700;
+            line-height: 1.48;
+            color: {{ mode == 'dark' ? '#f1f5f9' : '#0f172a' }};
+        }
+        .install-bar {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            padding: 9px 14px;
+            border-radius: 11px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+            font-size: 12.5px;
+            font-weight: 600;
+            background: {{ mode == 'dark' ? 'rgba(2,6,23,0.90)' : '#0f172a' }};
+            color: #e2e8f0;
+            border: 1px solid rgba(148, 163, 184, 0.25);
+            width: fit-content;
+            box-shadow: 0 10px 24px rgba(15, 23, 42, 0.22);
+        }
+        .install-bar .prompt { color: #38bdf8; }
+        .right {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        /* Flat, zero-3D-transform floating window for 100% razor-sharp @2x text rendering */
+        .window-frame {
+            width: 100%;
+            border-radius: 14px;
+            overflow: hidden;
+            background: {{ mode == 'dark' ? '#0f172a' : '#ffffff' }};
+            border: 1px solid {{ mode == 'dark' ? 'rgba(148,163,184,0.32)' : 'rgba(15,23,42,0.16)' }};
+            box-shadow: 0 28px 64px rgba(15, 23, 42, {{ mode == 'dark' ? '0.68' : '0.20' }}),
+                        0 6px 18px rgba(37, 99, 235, {{ mode == 'dark' ? '0.22' : '0.10' }});
+        }
+        .window-chrome {
+            height: 28px;
+            padding: 0 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: {{ mode == 'dark' ? '#1e293b' : '#f1f5f9' }};
+            border-bottom: 1px solid {{ mode == 'dark' ? 'rgba(148,163,184,0.16)' : 'rgba(15,23,42,0.08)' }};
+        }
+        .dots { display: flex; gap: 6px; }
+        .dot { width: 9px; height: 9px; border-radius: 50%; }
+        .dot.r { background: #ef4444; }
+        .dot.y { background: #f59e0b; }
+        .dot.g { background: #22c55e; }
+        .url-bar {
+            font-size: 11px;
+            font-weight: 600;
+            color: {{ mode == 'dark' ? '#94a3b8' : '#64748b' }};
+            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        }
+        .window-shot {
+            display: block;
+            width: 100%;
+            height: auto;
+            image-rendering: -webkit-optimize-contrast;
+        }
+    </style>
+</head>
+<body>
+    <div class="banner">
+        <div class="left">
+            <div class="brand-row">
+                <div class="logo-box">
+                    <img src="/images/liveux-logo.webp" alt="LiveUX">
+                </div>
+                <div>
+                    <div class="org-tag">Symfony UX • Zero Dependencies • 100% Customizable • MIT</div>
+                    <div style="font-size: 13.5px; font-weight: 700; opacity: 0.78;">github.com/LiveUX/file-manager-bundle</div>
+                </div>
+            </div>
+
+            <h1 class="title">
+                <span class="title-gradient">LiveUX</span> FileManagerBundle
+            </h1>
+
+            <p class="subtitle">
+                Enterprise-hardened, <strong>100% customizable</strong> File Manager &amp; Digital Asset Manager for Symfony UX — built for <strong>Desktop &amp; Mobile</strong> with 14 security layers, AI enrichment, and zero CSS framework dependencies.
+            </p>
+
+            <div class="pills">
+                <span class="pill">🎨 9 Themes • 6 Icon Sets</span>
+                <span class="pill">🌍 12 Languages + Native RTL</span>
+                <span class="pill">📱 Responsive Desktop &amp; Mobile</span>
+                <span class="pill">🧩 100% Customizable UI &amp; Hooks</span>
+                <span class="pill is-wide">☁️ Local • AWS S3 • Cloudflare R2 • Supabase • GCS • SFTP</span>
+                <span class="pill is-wide">🖼️ Built-in Image Editor • PDF, Video &amp; Code Preview</span>
+                <span class="pill is-wide">🖱️ Drag &amp; Drop Upload • Copy / Move / Paste • AI • ZIP &amp; More…</span>
+            </div>
+
+            <div class="integrations-box">
+                <div class="integrations-label">🔌 9 Built-in Editors + EasyAdmin 4/5 &amp; Symfony FormType</div>
+                <div class="integrations-list">
+                    TinyMCE • CKEditor 5 • Tiptap • Quill • Trix<br>
+                    Summernote • Editor.js • GrapesJS • Lexical • EasyAdmin
+                </div>
+            </div>
+
+            <div class="install-bar">
+                <span class="prompt">$</span>
+                <span>composer require liveux/file-manager-bundle</span>
+            </div>
+        </div>
+
+        <div class="right">
+            <div class="window-frame">
+                <div class="window-chrome">
+                    <div class="dots">
+                        <span class="dot r"></span>
+                        <span class="dot y"></span>
+                        <span class="dot g"></span>
+                    </div>
+                    <div class="url-bar">liveux / file-manager-bundle — {{ mode == 'dark' ? 'Dark Mode' : 'Light Mode' }}</div>
+                    <div style="width: 40px;"></div>
+                </div>
+                <img class="window-shot" src="/images/banner-preview-{{ mode }}.png" alt="LiveUX FileManagerBundle Preview">
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,100 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div style="display:flex; flex-direction:column; gap:20px;">
+        {# 1. SYMFONY UX LIVECOLLECTIONTYPE #}
+        <div class="liveux-demo-panel">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px;">
+                <div>
+                    <h2 style="margin:0 0 4px; font-size:1.15rem; font-weight:800;">1. Symfony UX <code>LiveCollectionType</code> (Zero-Reload Idiomorph Sync)</h2>
+                    <p style="margin:0; font-size:0.84rem; color:var(--demo-muted);">
+                        Add or remove rows dynamically via LiveComponent AJAX — <code>picker_controller.js</code> automatically re-syncs previews &amp; multi-galleries after every Idiomorph re-render.
+                    </p>
+                </div>
+                <span style="padding:4px 10px; border-radius:999px; background:rgba(37,99,235,0.12); color:#1d4ed8; font-size:0.75rem; font-weight:700;">symfony/ux-live-component</span>
+            </div>
+
+            <twig:LiveSlidesForm :fmTheme="activeTheme" :fmLocale="activeLocale" />
+        </div>
+
+        {# 2. STANDARD SYMFONY COLLECTIONTYPE #}
+        <div class="liveux-demo-panel">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
+                <div>
+                    <h2 style="margin:0 0 4px; font-size:1.15rem; font-weight:800;">2. Standard Symfony <code>CollectionType</code> (<code>data-prototype</code>)</h2>
+                    <p style="margin:0; font-size:0.84rem; color:var(--demo-muted);">
+                        Classic dynamic form rows without LiveComponent. Stimulus automatically binds <code>FileManagerPickerType</code> to every newly appended row with zero JS re-init.
+                    </p>
+                </div>
+                <span style="padding:4px 10px; border-radius:999px; background:rgba(124,58,237,0.12); color:#6d28d9; font-size:0.75rem; font-weight:700;">symfony/form</span>
+            </div>
+
+            {{ form_start(standardForm) }}
+                <div id="std-collection-holder"
+                     data-index="{{ standardForm.slides|length }}"
+                     data-prototype="{{ form_widget(standardForm.slides.vars.prototype)|e('html_attr') }}"
+                     style="display:flex; flex-direction:column; gap:12px; margin-bottom:14px;">
+                    {% for slideRow in standardForm.slides %}
+                        <div class="liveux-demo-card std-slide-row" style="padding:14px;">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                                <strong style="font-size:0.84rem;">Standard Slide #{{ loop.index }}</strong>
+                                <button type="button" class="liveux-demo-btn" data-remove-row>Remove</button>
+                            </div>
+                            <div style="display:grid; grid-template-columns:1fr 1.3fr 1.3fr; gap:12px; align-items:start;">
+                                <div>{{ form_row(slideRow.title) }}</div>
+                                <div>{{ form_row(slideRow.image) }}</div>
+                                <div>{{ form_row(slideRow.attachments) }}</div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div style="display:flex; justify-content:space-between; align-items:center; gap:12px;">
+                    <button type="button" id="std-add-slide-btn" class="liveux-demo-btn is-primary">+ Add Prototype Row</button>
+                    <button type="submit" class="liveux-demo-btn">Submit Standard Collection</button>
+                </div>
+                {{ form_rest(standardForm) }}
+            {{ form_end(standardForm) }}
+
+            {% if standardSubmitted is not null %}
+                <div style="margin-top:14px; padding:12px 14px; border-radius:10px; background:rgba(16,185,129,0.12); border:1px solid rgba(16,185,129,0.35);">
+                    <strong style="display:block; margin-bottom:6px; color:#047857;">Standard CollectionType submitted successfully!</strong>
+                    <pre style="margin:0; font-size:0.76rem; overflow:auto; max-height:180px;">{{ standardSubmitted|json_encode(constant('JSON_PRETTY_PRINT') b-or constant('JSON_UNESCAPED_SLASHES')) }}</pre>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            const holder = document.getElementById('std-collection-holder');
+            const addBtn = document.getElementById('std-add-slide-btn');
+            if (!holder || !addBtn) return;
+
+            holder.addEventListener('click', (e) => {
+                const rm = e.target.closest('[data-remove-row]');
+                if (rm) {
+                    rm.closest('.std-slide-row')?.remove();
+                }
+            });
+
+            addBtn.addEventListener('click', () => {
+                const idx = Number(holder.dataset.index || '0');
+                const protoHtml = (holder.dataset.prototype || '').replace(/__name__/g, String(idx));
+                const card = document.createElement('div');
+                card.className = 'liveux-demo-card std-slide-row';
+                card.style.padding = '14px';
+                card.innerHTML =
+                    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">' +
+                    '<strong style="font-size:0.84rem;">Standard Slide #' + (idx + 1) + '</strong>' +
+                    '<button type="button" class="liveux-demo-btn" data-remove-row>Remove</button>' +
+                    '</div>' +
+                    '<div style="display:grid;grid-template-columns:1fr 1.3fr 1.3fr;gap:12px;align-items:start;">' +
+                    protoHtml +
+                    '</div>';
+                holder.appendChild(card);
+                holder.dataset.index = String(idx + 1);
+            });
+        })();
+    </script>
+{% endblock %}

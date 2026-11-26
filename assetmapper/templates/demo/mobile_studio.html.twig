@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LiveUX FileManagerBundle — Mobile Showcase Studio</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body {
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+            background: radial-gradient(circle at 18% 22%, rgba(37, 99, 235, 0.25), transparent 50%),
+                        radial-gradient(circle at 82% 78%, rgba(124, 58, 237, 0.25), transparent 50%),
+                        linear-gradient(135deg, #060b18 0%, #0f172a 55%, #161433 100%);
+            color: #f8fafc;
+        }
+        .studio {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: grid;
+            grid-template-columns: 1fr 440px;
+            align-items: center;
+            max-width: 1520px;
+            margin: 0 auto;
+            padding: 40px 80px;
+            gap: 64px;
+        }
+        .studio::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: url('/images/liveux-logo.webp');
+            background-repeat: no-repeat;
+            background-position: 40px bottom;
+            background-size: 420px 420px;
+            opacity: 0.06;
+            pointer-events: none;
+        }
+        .info {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            border-radius: 999px;
+            background: rgba(96, 165, 250, 0.16);
+            border: 1px solid rgba(147, 197, 253, 0.3);
+            color: #93c5fd;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            width: fit-content;
+        }
+        h1 {
+            font-size: 48px;
+            font-weight: 900;
+            line-height: 1.08;
+            letter-spacing: -0.03em;
+        }
+        .grad {
+            background: linear-gradient(90deg, #60a5fa, #c084fc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .desc {
+            font-size: 19px;
+            line-height: 1.55;
+            color: #cbd5e1;
+            max-width: 660px;
+        }
+        .feature-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            max-width: 680px;
+        }
+        .feat {
+            padding: 16px 18px;
+            border-radius: 14px;
+            background: rgba(30, 41, 59, 0.72);
+            border: 1px solid rgba(148, 163, 184, 0.22);
+        }
+        .feat strong {
+            display: block;
+            font-size: 15px;
+            color: #f8fafc;
+            margin-bottom: 4px;
+        }
+        .feat span {
+            font-size: 13px;
+            color: #94a3b8;
+            line-height: 1.4;
+        }
+        .phone-wrap {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .phone {
+            width: 414px;
+            height: 868px;
+            padding: 12px;
+            border-radius: 48px;
+            background: linear-gradient(145deg, #334155, #0f172a);
+            box-shadow: 0 36px 80px rgba(0, 0, 0, 0.65),
+                        0 0 0 1px rgba(255, 255, 255, 0.14) inset;
+            position: relative;
+        }
+        .phone-notch {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 112px;
+            height: 24px;
+            border-radius: 999px;
+            background: #020617;
+            z-index: 10;
+        }
+        .phone-screen {
+            width: 390px;
+            height: 844px;
+            border-radius: 38px;
+            overflow: hidden;
+            background: #f8fafc;
+            border: none;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="studio">
+        <div class="info">
+            <div class="badge">Mobile-First Adaptive UX</div>
+            <h1>
+                <span class="grad">Native App Feel</span><br>
+                On Every Screen Size
+            </h1>
+            <p class="desc">
+                Automatically adapts below <code>768px</code> into edge-to-edge <code>100dvh</code> fullscreen modals or rounded bottom sheets with swipeable folder drawers and touch-friendly action sheets.
+            </p>
+            <div class="feature-list">
+                <div class="feat">
+                    <strong>Edge-to-Edge Fullscreen</strong>
+                    <span>Zero wasted borders on phones with clean 2-row topbar and sticky footer.</span>
+                </div>
+                <div class="feat">
+                    <strong>Native Bottom Sheet</strong>
+                    <span>Rounded top handle drawer via <code>mobileMode: 'sheet'</code> or OffCanvas bottom.</span>
+                </div>
+                <div class="feat">
+                    <strong>Slide-In Folder Drawer</strong>
+                    <span>Auto-collapsed tree opens smoothly on tap with backdrop auto-close.</span>
+                </div>
+                <div class="feat">
+                    <strong>Touch Action Sheets</strong>
+                    <span>Context menus &amp; gallery reordering work effortlessly with thumb gestures.</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="phone-wrap">
+            <div class="phone">
+                <div class="phone-notch"></div>
+                <iframe
+                    id="mobile-demo-frame"
+                    class="phone-screen"
+                    src="/modals?theme={{ activeTheme }}&icon_set={{ activeIconSet }}&locale={{ activeLocale }}&scheme={{ activeScheme }}"
+                    title="LiveUX FileManagerBundle Mobile View"
+                ></iframe>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
