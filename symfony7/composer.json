@@ -10,7 +10,7 @@
         "doctrine/doctrine-bundle": "^2.13",
         "doctrine/orm": "^3.3",
         "easycorp/easyadmin-bundle": "^4.24",
-        "liveux/file-manager-bundle": "@dev",
+        "liveux/file-manager-bundle": "^0.1",
         "symfony/asset": "7.4.*",
         "symfony/asset-mapper": "7.4.*",
         "symfony/console": "7.4.*",
@@ -78,17 +78,8 @@
     },
     "extra": {
         "symfony": {
-            "allow-contrib": false,
+            "allow-contrib": true,
             "require": "7.4.*"
         }
-    },
-    "repositories": [
-        {
-            "type": "path",
-            "url": "../../promosyon8/bundles/liveux-file-manager-bundle",
-            "options": {
-                "symlink": true
-            }
-        }
-    ]
+    }
 }

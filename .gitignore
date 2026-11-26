@@ -1,7 +1,9 @@
 # Dependencies & build caches
 */vendor/
+*/composer.lock
 */var/
 */public/assets/
+*/public/media-cache/
 encore/node_modules/
 encore/public/build/
 
